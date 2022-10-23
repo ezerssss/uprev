@@ -48,7 +48,8 @@ function AuthWrapper(props: PropsInterface) {
     }, [location.pathname]);
 
     const render = isLoading ? (
-        <div className="w-screen h-screen flex justify-center items-center">
+        <div className="w-screen h-screen flex flex-col gap-5 justify-center items-center">
+            <h1 className="font-bold text-6xl tracking-wide -mt-5">uprev.</h1>
             <ClipLoader />
         </div>
     ) : (

@@ -1,4 +1,4 @@
-import logo from '../images/logo.jpg';
+import logo from '../images/logo.png';
 import { signInWithRedirect, GoogleAuthProvider } from 'firebase/auth';
 import auth from '../firebase/auth';
 
@@ -24,10 +24,8 @@ function LoginPage() {
                 >
                     Sign in with Google
                 </button>
-                <p className="text-center text-[10px] mt-1">
-                    <i>
-                        Use an <b>@up.edu.ph</b> email
-                    </i>
+                <p className="text-center text-[10px] mt-2">
+                    Sign in with your @up.edu.ph email
                 </p>
             </div>
         </div>
