@@ -19,7 +19,7 @@ function LoginPage() {
 
             <div id="login-button">
                 <button
-                    className="border-2 border-slate-600 rounded-2xl px-6 py-3 w-60"
+                    className="border-2 border-slate-600 rounded-2xl px-6 py-3 w-60 hover:bg-red-500 hover:text-white transition ease-in-out duration-500"
                     onClick={handleLogin}
                 >
                     Sign in with Google

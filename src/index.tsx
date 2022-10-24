@@ -9,6 +9,7 @@ import LoginPage from './pages/LoginPage';
 import AuthWrapper from './components/AuthWrapper';
 import { Routes } from './enums/route.enums';
 import ContentWrapper from './components/ContentWrapper';
+import CreateQuizPage from './pages/CreateQuizPage/CreateQuizPage';
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement,
@@ -31,6 +32,16 @@ const router = createBrowserRouter([
         element: (
             <AuthWrapper>
                 <LoginPage />
+            </AuthWrapper>
+        ),
+    },
+    {
+        path: Routes.CREATE_QUIZ_PAGE,
+        element: (
+            <AuthWrapper>
+                <ContentWrapper>
+                    <CreateQuizPage />
+                </ContentWrapper>
             </AuthWrapper>
         ),
     },

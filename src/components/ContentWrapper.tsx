@@ -1,6 +1,9 @@
 import auth from '../firebase/auth';
 import { BsFacebook, BsTwitter, BsYoutube } from 'react-icons/bs';
 import { FaTiktok } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
+import { Routes } from '../enums/route.enums';
+import logo from '../images/logo.png';
 
 interface PropsInterface {
     children: JSX.Element | JSX.Element[];
@@ -9,6 +12,8 @@ interface PropsInterface {
 function ContentWrapper(props: PropsInterface) {
     const { children } = props;
 
+    const navigate = useNavigate();
+
     function handleLogout(): void {
         auth.signOut();
     }
@@ -16,8 +21,16 @@ function ContentWrapper(props: PropsInterface) {
     return (
         <div className="min-h-[100vh] flex flex-col">
             <header>
-                <nav className="px-20 lg:px-64 py-8 flex justify-between items-center">
-                    <p className="text-2xl font-bold tracking-wide">uprev.</p>
+                <nav className="px-4 sm:px-8 2xl:px-64 py-8 flex justify-between items-center">
+                    <div
+                        className="cursor-pointer flex -ml-4"
+                        onClick={() => navigate(Routes.HOME_PAGE)}
+                    >
+                        <img alt="uprev" className="h-10" src={logo} />
+                        <p className="text-2xl font-bold tracking-wide -ml-3">
+                            uprev.
+                        </p>
+                    </div>
                     <div>
                         <p
                             className="text-sm cursor-pointer"
@@ -28,8 +41,8 @@ function ContentWrapper(props: PropsInterface) {
                     </div>
                 </nav>
             </header>
-            <main className="flex-1">{children}</main>
-            <footer className="px-20 lg:px-64 py-8">
+            <main className="flex-1 px-4 sm:px-8 2xl:px-64">{children}</main>
+            <footer className="px-4 sm:px-8 2xl:px-64 py-8">
                 <div className="flex justify-between mb-2 items-center">
                     <p className="text-3xl">
                         <b>uprev.</b>
