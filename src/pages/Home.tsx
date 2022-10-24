@@ -44,13 +44,13 @@ function Home() {
                     </div>
                 </section>
                 <section className="w-1/2 hidden 2xl:block ">
-                    {/* <div>
+                    <div>
                         <img
                             alt="corporate"
                             className="rounded-2xl w-full mt-32"
                             src={corporate}
                         />
-                    </div> */}
+                    </div>
                 </section>
             </div>
             <div className="mt-24 mb-14 h-[250px] flex flex-col justify-center items-center gap-5 relative overflow-clip">
