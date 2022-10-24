@@ -1,6 +1,6 @@
 import { useRouteError } from 'react-router-dom';
 
-function NotFoundPage() {
+function ErrorPage() {
     const error = useRouteError() as {
         statusText: string | null;
         message: string | null;
@@ -18,4 +18,4 @@ function NotFoundPage() {
     );
 }
 
-export default NotFoundPage;
+export default ErrorPage;

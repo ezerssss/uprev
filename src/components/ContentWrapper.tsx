@@ -16,6 +16,7 @@ function ContentWrapper(props: PropsInterface) {
 
     function handleLogout(): void {
         auth.signOut();
+        navigate(Routes.LOGIN_PAGE);
     }
 
     return (
@@ -55,17 +56,20 @@ function ContentWrapper(props: PropsInterface) {
                     </div>
                 </div>
                 <hr className="h-[2px] bg-gray-200" />
-                <div className="flex h-32 text-gray-500">
-                    <div className="w-[48%] mt-5">
-                        <p>What is uprev?</p>
+                <div className="text-[13px] flex min-h-[5rem] text-gray-500">
+                    <div className="w-1/2 mt-5 px-2 border-r-[.5px]">
                         <p>
-                            Web application for UP students where they can{' '}
-                            <b>take</b> and <b>create</b> quizzes
+                            <b>What is uprev?</b>
+                        </p>
+                        <p>
+                            Web application for UP students where they can take
+                            and create quizzes
                         </p>
                     </div>
-                    <div className="h-[100%] bg-gray-200 w-[1px] mx-4"></div>
-                    <div className="w-[48%] mt-5">
-                        <p>Who are we?</p>
+                    <div className="w-1/2 border-l-[.5px] mt-5 px-2">
+                        <p>
+                            <b>Who are we?</b>
+                        </p>
                         <p>
                             Lorem ipsum dolor sit amet consectetur, adipisicing
                             elit. Delectus sed veniam nam voluptatum modi fugit

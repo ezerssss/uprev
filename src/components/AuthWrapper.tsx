@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ClipLoader from 'react-spinners/ClipLoader';
 import { doc, setDoc } from 'firebase/firestore';
@@ -6,6 +6,7 @@ import auth from '../firebase/auth';
 import db from '../firebase/db';
 import { Routes } from '../enums/route.enums';
 import { User } from '../interfaces/user';
+import { UserContext } from '../App';
 
 interface PropsInterface {
     children: JSX.Element;
@@ -16,6 +17,7 @@ function AuthWrapper(props: PropsInterface) {
     const navigate = useNavigate();
     const location = useLocation();
     const [isLoading, setIsLoading] = useState<boolean>(true);
+    const { setUser } = useContext(UserContext);
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(async (user) => {
@@ -41,6 +43,9 @@ function AuthWrapper(props: PropsInterface) {
             }
 
             setIsLoading(false);
+            if (!invalidUser && setUser) {
+                setUser(user);
+            }
         });
 
         return () => unsubscribe();

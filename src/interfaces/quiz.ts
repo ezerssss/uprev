@@ -10,5 +10,11 @@ export interface Quiz {
 
 export interface FirebaseQuiz {
     title: string;
+    creator: string;
+    email: string;
     questions: Quiz[];
+}
+
+export interface SnapshotFirebaseQuiz extends FirebaseQuiz {
+    id: string;
 }

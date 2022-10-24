@@ -1,15 +1,17 @@
 import { addDoc, collection } from 'firebase/firestore';
-import { useRef, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import { ClipLoader } from 'react-spinners';
 import ReactTooltip from 'react-tooltip';
 import Swal from 'sweetalert2';
 import { defaultQuestion } from '../../constants/question';
+import { UserContext } from '../../App';
 import db from '../../firebase/db';
 import { FirebaseQuiz, Quiz } from '../../interfaces/quiz';
 import { QuestionType } from '../../types/question.types';
 import QuestionBlock from './components/Question';
 
 function CreateQuizPage() {
+    const { user } = useContext(UserContext);
     const [number, setNumber] = useState<number>(1);
     const [questions, setQuestions] = useState<Quiz[]>([defaultQuestion]);
     const [isPosting, setIsPosting] = useState<boolean>(false);
@@ -95,6 +97,8 @@ function CreateQuizPage() {
 
         try {
             const object: FirebaseQuiz = {
+                creator: user?.displayName || '-',
+                email: user?.email || '-',
                 title,
                 questions,
             };
@@ -118,6 +122,17 @@ function CreateQuizPage() {
             );
         }
     }
+
+    useEffect(() => {
+        const unloadCallback = (event: BeforeUnloadEvent) => {
+            event.preventDefault();
+            event.returnValue = '';
+            return '';
+        };
+
+        window.addEventListener('beforeunload', unloadCallback);
+        return () => window.removeEventListener('beforeunload', unloadCallback);
+    }, []);
 
     const renderPostButton = isPosting ? <ClipLoader size={10} /> : 'Post Quiz';
 

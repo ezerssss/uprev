@@ -1,15 +1,20 @@
-import corporate from './images/corporate-image.webp';
+import corporate from '../images/corporate-image.webp';
 import { CiCircleList, CiEdit } from 'react-icons/ci';
 import { BsCode } from 'react-icons/bs';
-import logo from './images/logo.png';
+import logo from '../images/logo.png';
 import { useNavigate } from 'react-router-dom';
-import { Routes } from './enums/route.enums';
+import { Routes } from '../enums/route.enums';
 
 function Home() {
     const navigate = useNavigate();
 
     function handleCreateQuiz() {
         return navigate(Routes.CREATE_QUIZ_PAGE);
+    }
+
+    function handleSubjectClick(subject: string) {
+        const formattedSubject = subject.replace(' ', '-');
+        return navigate(`/quizzes/${formattedSubject}`);
     }
 
     return (
@@ -30,6 +35,7 @@ function Home() {
                                 <button
                                     className="aspect-square w-full border-2 rounded-2xl hover:scale-105 hover:bg-red-500 hover:text-white transition ease-in-out duration-500 flex justify-center items-center uppercase"
                                     key={subject}
+                                    onClick={() => handleSubjectClick(subject)}
                                 >
                                     <p>{subject}</p>
                                 </button>
