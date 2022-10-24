@@ -197,6 +197,7 @@ function QuizPage() {
             <section className="mt-8 mb-16">
                 <button
                     className="p-3 border bg-green-400 rounded-xl text-sm hover:bg-red-500 hover:text-white transition ease-in-out duration-500"
+                    disabled={!quiz?.questions.length}
                     onClick={handleFinishQuiz}
                 >
                     Finish Quiz

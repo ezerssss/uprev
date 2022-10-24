@@ -9,6 +9,7 @@ import db from '../../firebase/db';
 import { FirebaseQuiz, Quiz } from '../../interfaces/quiz';
 import { QuestionType } from '../../types/question.types';
 import QuestionBlock from './components/Question';
+import { useNavigate } from 'react-router-dom';
 
 function CreateQuizPage() {
     const { user } = useContext(UserContext);
@@ -16,6 +17,8 @@ function CreateQuizPage() {
     const [questions, setQuestions] = useState<Quiz[]>([defaultQuestion]);
     const [isPosting, setIsPosting] = useState<boolean>(false);
     const [title, setTitle] = useState<string>('');
+
+    const navigate = useNavigate();
 
     function handleEditQuestion(e: any, number: number, key: string): void {
         const index = questions.findIndex((object) => object.number === number);
@@ -103,14 +106,21 @@ function CreateQuizPage() {
                 questions,
             };
 
-            await addDoc(
+            const doc = await addDoc(
                 collection(db, 'subjects', subject, 'quizzes'),
                 object,
             );
 
-            Swal.fire('Success', 'Quiz Posted', 'success');
-
             setIsPosting(false);
+
+            await Swal.fire(
+                'Quiz Posted',
+                'Click the button to redirect to the quiz',
+                'success',
+            );
+
+            const formattedSubject = subject.replace(' ', '-');
+            navigate(`/quizzes/${formattedSubject}/${doc.id}`);
         } catch (error) {
             console.error(error);
             setIsPosting(false);
