@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import { Routes } from '../../enums/route.enums';
 import db from '../../firebase/db';
 import { Quiz, SnapshotFirebaseQuiz } from '../../interfaces/quiz';
+import { BiCheckCircle, BiX } from 'react-icons/bi';
 
 function QuizPage() {
     const { subject, doc: documentID } = useParams();
@@ -16,6 +17,7 @@ function QuizPage() {
     const [answers, setAnswers] = useState<
         { number: number; answer: string }[]
     >([]);
+    const [showAnswers, setShowAnswers] = useState<boolean>(false);
 
     useEffect(() => {
         async function getFirestore() {
@@ -81,13 +83,39 @@ function QuizPage() {
         const textValue =
             answers.find((answer) => answer.number === number)?.answer || '';
 
+        const isAnswerCorrect = textValue === item.answer;
+
         return (
-            <textarea
-                className="border-b-2 outline-none px-2 w-full h-7 min-h-[1.5rem]"
-                placeholder="Enter Answer"
-                value={textValue}
-                onChange={(e) => handleIdentificationAnswer(e, number)}
-            />
+            <div className="relative">
+                <textarea
+                    className={`border-b-2 outline-none px-2 w-full h-7 min-h-[1.5rem] ${
+                        showAnswers &&
+                        isAnswerCorrect &&
+                        'bg-green-500 text-white'
+                    } ${
+                        showAnswers &&
+                        !isAnswerCorrect &&
+                        'bg-red-500 text-white'
+                    }`}
+                    placeholder="Enter Answer"
+                    value={textValue}
+                    onChange={(e) => handleIdentificationAnswer(e, number)}
+                />
+                {showAnswers && isAnswerCorrect && (
+                    <BiCheckCircle className="absolute right-3 top-1 text-white" />
+                )}{' '}
+                {showAnswers && !isAnswerCorrect && (
+                    <>
+                        <BiX className="absolute right-3 top-1 text-white" />
+                        <p className="text-sm mt-2">Correct answer:</p>
+                        <input
+                            className="w-full p-2 border outline-none"
+                            readOnly
+                            value={item.answer}
+                        />
+                    </>
+                )}
+            </div>
         );
     }
 
@@ -129,18 +157,36 @@ function QuizPage() {
                         );
 
                         const isSelected = answer?.answer === choice;
+                        const isSelectedWrong =
+                            showAnswers &&
+                            isSelected &&
+                            answer?.answer !== item.answer;
+                        const isChoiceCorrectAnswer =
+                            showAnswers && choice === item.answer;
 
                         return (
                             <button
                                 key={`${choice}_${index}`}
-                                className={`border-2 p-2 rounded-2xl hover:bg-red-500 hover:text-white transition ease-in-out duration-500 ${
-                                    isSelected && 'bg-red-500 text-white'
+                                className={`border-2 p-2 rounded-2xl hover:bg-slate-500 hover:text-white transition ease-in-out duration-500 ${
+                                    isSelected &&
+                                    !showAnswers &&
+                                    'bg-slate-500 text-white'
+                                } ${
+                                    isSelectedWrong && 'bg-red-500 text-white'
+                                } ${isChoiceCorrectAnswer && 'bg-green-500'} 
+                                ${
+                                    showAnswers &&
+                                    'flex justify-between items-center'
                                 }`}
                                 onClick={() =>
                                     handleMultipleChoiceAnswer(choice, number)
                                 }
                             >
-                                {choice}
+                                <p>{choice}</p>
+                                {isChoiceCorrectAnswer && <BiCheckCircle />}
+                                {isSelectedWrong && (
+                                    <BiX className="text-red-800" />
+                                )}
                             </button>
                         );
                     })}
@@ -179,6 +225,8 @@ function QuizPage() {
             ? 'You Aced the quiz!'
             : `Your scored ${score} for this quiz`;
         const type = isScoreGreaterThanHalf ? 'success' : 'info';
+
+        setShowAnswers(true);
 
         Swal.fire(title, text, type);
     }
