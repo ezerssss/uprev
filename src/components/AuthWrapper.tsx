@@ -21,7 +21,7 @@ function AuthWrapper(props: PropsInterface) {
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(async (user) => {
-            const invalidUser = !user || !user.email?.includes('@up.edu.ph');
+            const invalidUser = !user; // || !user.email?.includes('@up.edu.ph')
 
             if (location.pathname === Routes.LOGIN_PAGE && !invalidUser) {
                 const userDocument: User = {
