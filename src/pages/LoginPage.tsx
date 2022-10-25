@@ -11,10 +11,8 @@ function LoginPage() {
     return (
         <div className="h-screen w-screen p-6 flex justify-center items-center flex-col">
             <div className="text-center" id="login-logo">
-                <img src={logo} alt="uprev" className="m-auto w-44" />
-                <h1 className="font-bold text-6xl tracking-wide -mt-5">
-                    uprev.
-                </h1>
+                <img src={logo} alt="uprev" className="m-auto w-24" />
+                <h1 className="font-bold text-6xl tracking-wide">uprev.</h1>
             </div>
 
             <div id="login-button">
