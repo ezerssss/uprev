@@ -1,7 +1,6 @@
 import { addDoc, collection } from 'firebase/firestore';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { ClipLoader } from 'react-spinners';
-import ReactTooltip from 'react-tooltip';
 import Swal from 'sweetalert2';
 import { defaultQuestion } from '../../constants/question';
 import { UserContext } from '../../App';
@@ -148,7 +147,6 @@ function CreateQuizPage() {
 
     return (
         <>
-            <ReactTooltip />
             <section className="flex gap-2 items-center">
                 <p>Subject</p>
                 <select

@@ -1,4 +1,4 @@
-import corporate from '../images/corporate-image.webp';
+import corporate from '../images/corporate-image.png';
 import { CiCircleList, CiEdit } from 'react-icons/ci';
 import { BsCode } from 'react-icons/bs';
 import logo from '../images/logo.png';
@@ -23,7 +23,7 @@ function Home() {
                 <section className="w-full 2xl:w-1/2 mt-5">
                     <img
                         alt="corporate"
-                        className="rounded-2xl w-96 block 2xl:hidden my-5 m-auto"
+                        className="rounded-2xl w-full block 2xl:hidden my-5 m-auto"
                         src={corporate}
                     />
                     <h1 className="text-[3.2rem] leading-none font-bold my-10 text-center 2xl:text-left">
