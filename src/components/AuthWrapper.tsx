@@ -24,7 +24,9 @@ function AuthWrapper(props: PropsInterface) {
             const noUser = !user;
 
             if (noUser) {
-                return navigate(Routes.LOGIN_PAGE);
+                navigate(Routes.LOGIN_PAGE);
+                setIsLoading(false);
+                return;
             }
 
             const isUpEmail = !!user.email?.includes('@up.edu.ph');
@@ -45,7 +47,10 @@ function AuthWrapper(props: PropsInterface) {
                         merge: true,
                     });
                 }
-                return navigate(Routes.HOME_PAGE);
+                setIsLoading(false);
+                navigate(Routes.HOME_PAGE);
+
+                return;
             }
 
             if (setUser) {

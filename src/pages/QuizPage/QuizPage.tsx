@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { Routes } from '../../enums/route.enums';
 import db from '../../firebase/db';
-import { Quiz, SnapshotFirebaseQuiz } from '../../interfaces/quiz';
+import { Quiz, QuizAnswer, SnapshotFirebaseQuiz } from '../../interfaces/quiz';
 import { BiCheckCircle, BiX } from 'react-icons/bi';
 
 function QuizPage() {
@@ -14,9 +14,7 @@ function QuizPage() {
     const formattedDocumentID = documentID || 'lost';
 
     const [quiz, setQuiz] = useState<SnapshotFirebaseQuiz | null>(null);
-    const [answers, setAnswers] = useState<
-        { number: number; answer: string }[]
-    >([]);
+    const [answers, setAnswers] = useState<QuizAnswer[]>([]);
     const [showAnswers, setShowAnswers] = useState<boolean>(false);
 
     useEffect(() => {

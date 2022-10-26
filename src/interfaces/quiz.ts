@@ -18,3 +18,8 @@ export interface FirebaseQuiz {
 export interface SnapshotFirebaseQuiz extends FirebaseQuiz {
     id: string;
 }
+
+export interface QuizAnswer {
+    number: number;
+    answer: string;
+}
