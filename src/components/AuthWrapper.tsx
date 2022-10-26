@@ -17,37 +17,41 @@ function AuthWrapper(props: PropsInterface) {
     const navigate = useNavigate();
     const location = useLocation();
     const [isLoading, setIsLoading] = useState<boolean>(true);
-    const { setUser } = useContext(UserContext);
+    const { setUser, setIsUpEmail } = useContext(UserContext);
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(async (user) => {
-            const invalidUser =
-                (!user || !user.email?.includes('@up.edu.ph')) &&
-                user?.email !== 'sheensantoscapadngan@gmail.com';
+            const noUser = !user;
 
-            if (location.pathname === Routes.LOGIN_PAGE && !invalidUser) {
-                const userDocument: User = {
-                    displayName: user.displayName || '-',
-                    email: user.email || '-',
-                    photoURL: user.photoURL || '-',
-                };
-
-                await setDoc(doc(db, 'users', user.uid), userDocument, {
-                    merge: true,
-                });
-
-                navigate(Routes.HOME_PAGE);
-                return;
+            if (noUser) {
+                return navigate(Routes.LOGIN_PAGE);
             }
 
-            if (invalidUser) {
-                navigate(Routes.LOGIN_PAGE);
+            const isUpEmail = !!user.email?.includes('@up.edu.ph');
+
+            if (setIsUpEmail) {
+                setIsUpEmail(isUpEmail);
             }
 
-            setIsLoading(false);
-            if (!invalidUser && setUser) {
+            if (location.pathname === Routes.LOGIN_PAGE) {
+                if (isUpEmail) {
+                    const userDocument: User = {
+                        displayName: user.displayName || '-',
+                        email: user.email || '-',
+                        photoURL: user.photoURL || '-',
+                    };
+
+                    await setDoc(doc(db, 'users', user.uid), userDocument, {
+                        merge: true,
+                    });
+                }
+                return navigate(Routes.HOME_PAGE);
+            }
+
+            if (setUser) {
                 setUser(user);
             }
+            setIsLoading(false);
         });
 
         return () => unsubscribe();

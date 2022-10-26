@@ -12,11 +12,15 @@ import QuizPage from './pages/QuizPage/QuizPage';
 import { User } from 'firebase/auth';
 
 export const UserContext = createContext<{
+    isUpEmail: boolean | null;
     user: User | null;
+    setIsUpEmail: React.Dispatch<React.SetStateAction<boolean | null>> | null;
     setUser: React.Dispatch<React.SetStateAction<User | null>> | null;
 }>({
+    isUpEmail: false,
     user: null,
     setUser: null,
+    setIsUpEmail: null,
 });
 
 function App() {
@@ -73,9 +77,12 @@ function App() {
     ]);
 
     const [user, setUser] = useState<User | null>(null);
+    const [isUpEmail, setIsUpEmail] = useState<boolean | null>(false);
 
     return (
-        <UserContext.Provider value={{ user, setUser }}>
+        <UserContext.Provider
+            value={{ isUpEmail, user, setUser, setIsUpEmail }}
+        >
             <RouterProvider router={router} />
         </UserContext.Provider>
     );

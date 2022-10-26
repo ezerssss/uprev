@@ -11,7 +11,7 @@ import QuestionBlock from './components/Question';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 function CreateQuizPage() {
-    const { user } = useContext(UserContext);
+    const { user, isUpEmail } = useContext(UserContext);
     const [number, setNumber] = useState<number>(1);
     const [questions, setQuestions] = useState<Quiz[]>([defaultQuestion]);
     const [isPosting, setIsPosting] = useState<boolean>(false);
@@ -170,6 +170,16 @@ function CreateQuizPage() {
 
     async function handleSubmitButton() {
         setIsPosting(true);
+        if (!isUpEmail) {
+            Swal.fire(
+                'Error',
+                'To post a quiz, you must use your UP email',
+                'info',
+            );
+            setIsPosting(false);
+
+            return;
+        }
 
         const subject = ref.current?.value || 'lost';
         const object: FirebaseQuiz = {
