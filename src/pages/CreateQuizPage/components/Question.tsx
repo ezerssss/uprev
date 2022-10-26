@@ -9,6 +9,7 @@ interface PropsInterface {
     onEditChoices: (e: any, number: number, index: number) => void;
     onAddChoices: (number: number) => void;
     onChangeQuestionType: (number: number, type: QuestionType) => void;
+    onDelete: (number: number) => void;
 }
 
 function QuestionBlock(props: PropsInterface) {
@@ -19,6 +20,7 @@ function QuestionBlock(props: PropsInterface) {
         onEditChoices,
         onAddChoices,
         onChangeQuestionType,
+        onDelete,
     } = props;
     const { number, type, question, answer, choices } = questionObject;
 
@@ -96,6 +98,12 @@ function QuestionBlock(props: PropsInterface) {
                     onChange={(e) => onEditQuestion(e, number, 'answer')}
                 />
             </div>
+            <button
+                className="mt-4 mb-2 p-2 border rounded-xl hover:bg-red-500 hover:text-white transition ease-in-out duration-500"
+                onClick={() => onDelete(questionNumber)}
+            >
+                Delete
+            </button>
         </div>
     );
 }

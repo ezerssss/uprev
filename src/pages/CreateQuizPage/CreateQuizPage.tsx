@@ -1,4 +1,4 @@
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { useContext, useEffect, useRef, useState } from 'react';
 import { ClipLoader } from 'react-spinners';
 import Swal from 'sweetalert2';
@@ -8,7 +8,7 @@ import db from '../../firebase/db';
 import { FirebaseQuiz, Quiz } from '../../interfaces/quiz';
 import { QuestionType } from '../../types/question.types';
 import QuestionBlock from './components/Question';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 function CreateQuizPage() {
     const { user } = useContext(UserContext);
@@ -18,6 +18,44 @@ function CreateQuizPage() {
     const [title, setTitle] = useState<string>('');
 
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+
+    const isEditing = !!searchParams.get('edit');
+    let id = searchParams.get('id');
+
+    useEffect(() => {
+        async function getFirestoreDocument() {
+            if (!id) {
+                return;
+            }
+
+            const subject = searchParams.get('subject')?.replace('-', ' ');
+            if (!subject) {
+                return;
+            }
+
+            const docRef = doc(db, 'subjects', subject, 'quizzes', id);
+            try {
+                const docSnap = await getDoc(docRef);
+                const data = docSnap.data() as FirebaseQuiz;
+
+                ref.current!.value = subject;
+                setTitle(data.title);
+                setQuestions(data.questions);
+            } catch (error) {
+                console.error(error);
+
+                Swal.fire(
+                    'Error',
+                    'Something went wrong, please contact Ezra Magbanua',
+                    'error',
+                );
+            }
+        }
+
+        getFirestoreDocument();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isEditing, id]);
 
     function handleEditQuestion(e: any, number: number, key: string): void {
         const index = questions.findIndex((object) => object.number === number);
@@ -92,34 +130,65 @@ function CreateQuizPage() {
 
     const ref = useRef<HTMLSelectElement | null>(null);
 
-    async function handlePostQuiz() {
+    async function handlePost(
+        object: FirebaseQuiz,
+        subject: string,
+    ): Promise<string> {
+        const doc = await addDoc(
+            collection(db, 'subjects', subject, 'quizzes'),
+            object,
+        );
+
+        return doc.id;
+    }
+
+    async function handleEdit(object: FirebaseQuiz) {
+        if (!id) {
+            console.error('No Id found');
+            return;
+        }
+
+        const subject = searchParams.get('subject')?.replace('-', ' ');
+        if (!subject) {
+            console.error('No subject found');
+            return;
+        }
+
+        const docRef = doc(db, 'subjects', subject, 'quizzes', id);
+
+        await updateDoc(docRef, { ...object });
+    }
+
+    async function handleSubmitButton() {
         setIsPosting(true);
 
         const subject = ref.current?.value || 'lost';
+        const object: FirebaseQuiz = {
+            creator: user?.displayName || '-',
+            email: user?.email || '-',
+            title,
+            questions,
+        };
 
         try {
-            const object: FirebaseQuiz = {
-                creator: user?.displayName || '-',
-                email: user?.email || '-',
-                title,
-                questions,
-            };
-
-            const doc = await addDoc(
-                collection(db, 'subjects', subject, 'quizzes'),
-                object,
-            );
+            if (isEditing) {
+                handleEdit(object);
+            } else {
+                id = await handlePost(object, subject);
+            }
 
             setIsPosting(false);
 
+            const popUpText = isEditing ? 'Quiz Edited' : 'Quiz Posted';
+
             await Swal.fire(
-                'Quiz Posted',
+                popUpText,
                 'Click the button to redirect to the quiz',
                 'success',
             );
 
             const formattedSubject = subject.replace(' ', '-');
-            navigate(`/quizzes/${formattedSubject}/${doc.id}`);
+            navigate(`/quizzes/${formattedSubject}/${id}`);
         } catch (error) {
             console.error(error);
             setIsPosting(false);
@@ -130,6 +199,12 @@ function CreateQuizPage() {
                 'error',
             );
         }
+    }
+
+    function handleDelete(number: number) {
+        setQuestions(
+            questions.filter((question) => question.number !== number),
+        );
     }
 
     useEffect(() => {
@@ -143,7 +218,13 @@ function CreateQuizPage() {
         return () => window.removeEventListener('beforeunload', unloadCallback);
     }, []);
 
-    const renderPostButton = isPosting ? <ClipLoader size={10} /> : 'Post Quiz';
+    const postButtonText = isEditing ? 'Edit Quiz' : 'Post Quiz';
+
+    const renderSubmitButton = isPosting ? (
+        <ClipLoader size={10} />
+    ) : (
+        postButtonText
+    );
 
     return (
         <>
@@ -152,6 +233,7 @@ function CreateQuizPage() {
                 <select
                     className="uppercase border p-2 rounded-xl outline-none"
                     ref={ref}
+                    disabled={isEditing}
                 >
                     <option value="math 18">math 18</option>
                     <option value="cmsc 10">cmsc 10</option>
@@ -178,6 +260,7 @@ function CreateQuizPage() {
                         onEditChoices={handleEditChoices}
                         onAddChoices={handleAddChoices}
                         onChangeQuestionType={handleChangeQuestionType}
+                        onDelete={handleDelete}
                     />
                 ))}
             </section>
@@ -190,9 +273,9 @@ function CreateQuizPage() {
                 </button>
                 <button
                     className="p-2 border rounded-xl hover:bg-green-500 hover:text-white transition ease-in-out duration-500"
-                    onClick={handlePostQuiz}
+                    onClick={handleSubmitButton}
                 >
-                    {renderPostButton}
+                    {renderSubmitButton}
                 </button>
             </section>
         </>
