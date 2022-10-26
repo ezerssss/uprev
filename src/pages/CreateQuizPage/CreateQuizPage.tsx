@@ -40,6 +40,15 @@ function CreateQuizPage() {
                 const data = docSnap.data() as FirebaseQuiz;
 
                 ref.current!.value = subject;
+                let highestNumber = 0;
+
+                data.questions.forEach((question) => {
+                    if (question.number > highestNumber) {
+                        highestNumber = question.number;
+                    }
+                });
+
+                setNumber(highestNumber + 1);
                 setTitle(data.title);
                 setQuestions(data.questions);
             } catch (error) {
