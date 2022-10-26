@@ -109,9 +109,14 @@ function ContentWrapper(props: PropsInterface) {
                         <p className="text-sm text-gray-500">
                             Developed by dioskor0
                         </p>
-                        <p className="text-sm text-gray-500">
+                        <a
+                            href="https://github.com/ezerssss/uprev"
+                            target="_blank"
+                            className="text-sm text-gray-500"
+                            rel="noreferrer"
+                        >
                             Want to contribute?
-                        </p>
+                        </a>
                     </div>
                 </footer>
             </div>
