@@ -194,6 +194,7 @@ function QuizPage() {
             };
 
             await setDoc(docRef, object);
+            setIsAlreadyTaken(true);
         } catch (error) {
             errorAlert(error);
         }

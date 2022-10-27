@@ -69,7 +69,7 @@ function FlashcardsPage() {
                 )}
             </section>
             <section className="my-10">
-                <p className="text-sm mb-4">Long click to flip the card</p>
+                <p className="text-sm mb-4">Press and hold to flip the card</p>
                 {renderOneFlashcard}
                 {renderCarouselFlashcards}
             </section>
