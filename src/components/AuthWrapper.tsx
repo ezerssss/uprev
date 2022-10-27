@@ -56,6 +56,10 @@ function AuthWrapper(props: PropsInterface) {
                 return;
             }
 
+            if (setUser) {
+                setUser(user);
+            }
+
             setIsLoading(false);
         });
 

@@ -239,7 +239,7 @@ function CreateQuizPage() {
             <section className="flex gap-2 items-center">
                 <p>Subject</p>
                 <select
-                    className="uppercase border p-2 rounded-xl outline-none"
+                    className="uppercase border p-2 rounded-xl outline-none cursor-pointer"
                     ref={ref}
                     disabled={isEditing}
                 >

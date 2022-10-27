@@ -10,6 +10,9 @@ import CreateQuizPage from './pages/CreateQuizPage/CreateQuizPage';
 import QuizListPage from './pages/QuizListPage/QuizListPage';
 import QuizPage from './pages/QuizPage/QuizPage';
 import { User } from 'firebase/auth';
+import FlashcardsListPage from './pages/FlashcardsListPage/FlashcardsListPage';
+import FlashcardsPage from './pages/FlashcardsPage/FlashcardsPage';
+import CreateFlashcardPage from './pages/CreateFlashcardPage/CreateFlashcardPage';
 
 export const UserContext = createContext<{
     isUpEmail: boolean | null;
@@ -55,6 +58,16 @@ function App() {
             ),
         },
         {
+            path: Routes.CREATE_FLASHCARD_PAGE,
+            element: (
+                <AuthWrapper>
+                    <ContentWrapper>
+                        <CreateFlashcardPage />
+                    </ContentWrapper>
+                </AuthWrapper>
+            ),
+        },
+        {
             path: Routes.QUIZ_LIST_PAGE,
             element: (
                 <AuthWrapper>
@@ -70,6 +83,26 @@ function App() {
                 <AuthWrapper>
                     <ContentWrapper>
                         <QuizPage />
+                    </ContentWrapper>
+                </AuthWrapper>
+            ),
+        },
+        {
+            path: Routes.FLASHCARDS_LIST_PAGE,
+            element: (
+                <AuthWrapper>
+                    <ContentWrapper>
+                        <FlashcardsListPage />
+                    </ContentWrapper>
+                </AuthWrapper>
+            ),
+        },
+        {
+            path: Routes.FLASHCARDS_PAGE,
+            element: (
+                <AuthWrapper>
+                    <ContentWrapper>
+                        <FlashcardsPage />
                     </ContentWrapper>
                 </AuthWrapper>
             ),

@@ -11,6 +11,9 @@ function Home() {
     function handleCreateQuiz() {
         return navigate(Routes.CREATE_QUIZ_PAGE);
     }
+    function handleCreateFlashcard() {
+        return navigate(Routes.CREATE_FLASHCARD_PAGE);
+    }
 
     function handleSubjectClick(subject: string) {
         const formattedSubject = subject.replace(' ', '-');
@@ -53,14 +56,26 @@ function Home() {
                     </div>
                 </section>
             </div>
-            <div className="mt-24 mb-14 h-[250px] flex flex-col justify-center items-center gap-5 relative overflow-clip">
-                <p className="z-20">Want to help your fellow students?</p>
-                <button
-                    className="text-lg leading-none font-bold text-center border-2 px-10 h-16 rounded-2xl hover:bg-red-500 hover:text-white transition ease-in-out duration-500 z-20"
-                    onClick={handleCreateQuiz}
-                >
-                    Make your own quiz
-                </button>
+            <div className="mt-24 mb-14 h-[250px] flex flex-col items-center gap-5 relative overflow-clip">
+                <div className="mt-5 text-center">
+                    <p>Want to help your fellow students?</p>
+                    <p>Post your own</p>
+                </div>
+                <div className="flex gap-2">
+                    <button
+                        className="text-lg leading-none font-bold text-center border-2 px-5 p-4 rounded-2xl hover:bg-red-500 hover:text-white transition ease-in-out duration-500 z-20"
+                        onClick={handleCreateFlashcard}
+                    >
+                        Flashcard
+                    </button>
+                    <button
+                        className="text-lg leading-none font-bold text-center border-2 px-5 p-2 rounded-2xl hover:bg-red-500 hover:text-white transition ease-in-out duration-500 z-20"
+                        onClick={handleCreateQuiz}
+                    >
+                        Quiz
+                    </button>
+                </div>
+
                 <div className="flex gap-5 z-20">
                     <CiCircleList size={30} />
                     <CiEdit size={30} />
@@ -68,7 +83,7 @@ function Home() {
                 </div>
                 <img
                     alt="uprev"
-                    className="absolute opacity-5 m-auto"
+                    className="absolute opacity-5 m-auto h-full"
                     src={logo}
                 />
             </div>

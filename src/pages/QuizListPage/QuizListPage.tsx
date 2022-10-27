@@ -6,7 +6,7 @@ import {
     onSnapshot,
     query,
 } from 'firebase/firestore';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ClipLoader } from 'react-spinners';
 import { UserContext } from '../../App';
@@ -18,6 +18,7 @@ import {
     SnapshotFirebaseQuiz,
     SnapshotFirebaseQuizWithScores,
 } from '../../interfaces/quiz';
+import Quiz from './components/Quiz';
 
 function QuizListPage() {
     let { subject } = useParams();
@@ -29,8 +30,6 @@ function QuizListPage() {
         [],
     );
     const [isLoading, setIsLoading] = useState<boolean>(true);
-
-    const buttonsRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
         const quizzesRef = collection(
@@ -90,15 +89,6 @@ function QuizListPage() {
 
     const renderNoQuizzes = !isLoading && !quizzes.length && <p>No Quizzes</p>;
 
-    function handleQuizClick(e: any, id: string) {
-        const clickingButtons = buttonsRef.current?.contains(e.target);
-        if (clickingButtons) {
-            return;
-        }
-
-        return navigate(`/quizzes/${formattedSubject}/${id}`);
-    }
-
     async function handleDelete(id: string) {
         try {
             await deleteDoc(
@@ -110,7 +100,11 @@ function QuizListPage() {
     }
 
     function handleEdit(id: string) {
-        return navigate(`/create?edit=true&id=${id}&subject=${subject}`);
+        return navigate(`/create/quiz?edit=true&id=${id}&subject=${subject}`);
+    }
+
+    function handleFlashcards() {
+        return navigate(`/flashcards/${subject}`);
     }
 
     return (
@@ -119,7 +113,10 @@ function QuizListPage() {
                 <h1 className="text-4xl my-5">
                     <b className="uppercase">{formattedSubject}</b> Quizzes
                 </h1>
-                <button className="text-sm my-5 border rounded-xl p-2 hover:bg-red-500 hover:text-white transition ease-in-out duration-500">
+                <button
+                    className="text-sm my-5 border rounded-xl p-2 hover:bg-red-500 hover:text-white transition ease-in-out duration-500"
+                    onClick={handleFlashcards}
+                >
                     Flashcards
                 </button>
             </section>
@@ -127,61 +124,15 @@ function QuizListPage() {
             <section className="my-5">
                 {renderLoading}
                 {renderNoQuizzes}
-                {quizzes.map(
-                    ({ id, title, questions, creator, email, userScore }) => {
-                        const areButtonsVisible = email === user?.email;
-
-                        const renderScore = userScore && (
-                            <p>
-                                Score: {userScore.score} / {questions.length}
-                            </p>
-                        );
-
-                        return (
-                            <div
-                                key={id}
-                                className="border p-5 rounded-xl my-3 cursor-pointer flex justify-between items-center hover:bg-red-500 hover:text-white transition ease-in-out duration-500"
-                                onClick={(e) => handleQuizClick(e, id)}
-                            >
-                                <div>
-                                    <p>{title}</p>
-                                    <div className="text-[12px]">
-                                        <p className="mb-3">
-                                            Item Count: {questions.length}
-                                        </p>
-                                        <p>
-                                            By: {creator} | {email}
-                                        </p>
-                                    </div>
-                                </div>
-                                <div
-                                    className="flex gap-2 text-sm items-center"
-                                    ref={buttonsRef}
-                                >
-                                    {renderScore}
-                                    {areButtonsVisible && (
-                                        <>
-                                            <button
-                                                className="p-2 border rounded-xl hover:bg-green-600"
-                                                disabled={!areButtonsVisible}
-                                                onClick={() => handleEdit(id)}
-                                            >
-                                                Edit
-                                            </button>
-                                            <button
-                                                className="p-2 border rounded-xl hover:bg-slate-500"
-                                                disabled={!areButtonsVisible}
-                                                onClick={() => handleDelete(id)}
-                                            >
-                                                Delete
-                                            </button>
-                                        </>
-                                    )}
-                                </div>
-                            </div>
-                        );
-                    },
-                )}
+                {quizzes.map((quiz) => (
+                    <Quiz
+                        key={quiz.id}
+                        subject={subject}
+                        quiz={quiz}
+                        handleEdit={handleEdit}
+                        handleDelete={handleDelete}
+                    />
+                ))}
             </section>
         </>
     );

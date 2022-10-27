@@ -5,9 +5,9 @@ import Swal from 'sweetalert2';
 import { Routes } from '../../enums/route.enums';
 import db from '../../firebase/db';
 import {
+    FirebaseQuiz,
     FirebaseQuizAnswers,
     QuizAnswer,
-    SnapshotFirebaseQuiz,
 } from '../../interfaces/quiz';
 import { UserContext } from '../../App';
 import MultipleChoice from './components/MultipleChoice';
@@ -21,7 +21,7 @@ function QuizPage() {
     const formattedDocumentID = documentID || 'lost';
 
     const { user, isUpEmail } = useContext(UserContext);
-    const [quiz, setQuiz] = useState<SnapshotFirebaseQuiz | null>(null);
+    const [quiz, setQuiz] = useState<FirebaseQuiz | null>(null);
     const [answers, setAnswers] = useState<QuizAnswer[]>([]);
     const [showAnswers, setShowAnswers] = useState<boolean>(false);
     const [isAlreadyTaken, setIsAlreadyTaken] = useState<boolean>(false);
@@ -51,7 +51,7 @@ function QuizPage() {
                 if (!quizSnapshot.exists()) {
                     throw Error(`Quiz not Found: ${documentID}`);
                 }
-                setQuiz(quizSnapshot.data() as SnapshotFirebaseQuiz);
+                setQuiz(quizSnapshot.data() as FirebaseQuiz);
 
                 const scoreSnapshot = await getDoc(scoreRef);
                 if (scoreSnapshot.exists()) {
