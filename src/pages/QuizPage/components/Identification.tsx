@@ -1,5 +1,6 @@
 import React from 'react';
-import { BiCheckCircle, BiX } from 'react-icons/bi';
+import { BiCheckCircle } from 'react-icons/bi';
+import { TbCircleX } from 'react-icons/tb';
 import { Quiz, QuizAnswer } from '../../../interfaces/quiz';
 
 interface PropsInterface {
@@ -34,7 +35,7 @@ function Identification(props: PropsInterface) {
             )}{' '}
             {showAnswers && !isAnswerCorrect && (
                 <>
-                    <BiX className="absolute right-3 top-1 text-white" />
+                    <TbCircleX className="absolute right-3 top-1 text-white" />
                     <p className="text-sm mt-2">Correct answer:</p>
                     <input
                         readOnly

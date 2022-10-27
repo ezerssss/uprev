@@ -1,5 +1,6 @@
 import React from 'react';
-import { BiCheckCircle, BiX } from 'react-icons/bi';
+import { TbCircleX } from 'react-icons/tb';
+import { BiCheckCircle } from 'react-icons/bi';
 import { Quiz, QuizAnswer } from '../../../interfaces/quiz';
 
 interface PropsInterface {
@@ -54,7 +55,7 @@ function MultipleChoice(props: PropsInterface) {
                                 <BiCheckCircle className="text-white" />
                             )}
                             {isSelectedWrong && (
-                                <BiX className="text-red-800" />
+                                <TbCircleX className="text-white" />
                             )}
                         </button>
                     );

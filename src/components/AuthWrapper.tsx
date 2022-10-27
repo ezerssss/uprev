@@ -42,10 +42,13 @@ function AuthWrapper(props: PropsInterface) {
                         email: user.email || '-',
                         photoURL: user.photoURL || '-',
                     };
-
                     await setDoc(doc(db, 'users', user.uid), userDocument, {
                         merge: true,
                     });
+                }
+
+                if (setUser) {
+                    setUser(user);
                 }
                 setIsLoading(false);
                 navigate(Routes.HOME_PAGE);
@@ -53,9 +56,6 @@ function AuthWrapper(props: PropsInterface) {
                 return;
             }
 
-            if (setUser) {
-                setUser(user);
-            }
             setIsLoading(false);
         });
 

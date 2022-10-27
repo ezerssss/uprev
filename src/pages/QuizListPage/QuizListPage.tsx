@@ -115,10 +115,13 @@ function QuizListPage() {
 
     return (
         <>
-            <section>
-                <h1 className="text-4xl my-5 mb-10">
+            <section className="flex justify-between items-center">
+                <h1 className="text-4xl my-5">
                     <b className="uppercase">{formattedSubject}</b> Quizzes
                 </h1>
+                <button className="text-sm my-5 border rounded-xl p-2 hover:bg-red-500 hover:text-white transition ease-in-out duration-500">
+                    Flashcards
+                </button>
             </section>
 
             <section className="my-5">
