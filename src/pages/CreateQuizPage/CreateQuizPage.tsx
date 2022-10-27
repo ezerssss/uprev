@@ -9,6 +9,7 @@ import { FirebaseQuiz, Quiz } from '../../interfaces/quiz';
 import { QuestionType } from '../../types/question.types';
 import QuestionBlock from './components/Question';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { errorAlert } from '../../helpers/errors';
 
 function CreateQuizPage() {
     const { user, isUpEmail } = useContext(UserContext);
@@ -52,13 +53,7 @@ function CreateQuizPage() {
                 setTitle(data.title);
                 setQuestions(data.questions);
             } catch (error) {
-                console.error(error);
-
-                Swal.fire(
-                    'Error',
-                    'Something went wrong, please contact Ezra Magbanua',
-                    'error',
-                );
+                errorAlert(error);
             }
         }
 
@@ -209,14 +204,8 @@ function CreateQuizPage() {
             const formattedSubject = subject.replace(' ', '-');
             navigate(`/quizzes/${formattedSubject}/${id}`);
         } catch (error) {
-            console.error(error);
+            errorAlert(error);
             setIsPosting(false);
-
-            Swal.fire(
-                'Error',
-                'Something went wrong, please contact Ezra Magbanua',
-                'error',
-            );
         }
     }
 

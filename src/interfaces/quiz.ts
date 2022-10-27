@@ -19,7 +19,16 @@ export interface SnapshotFirebaseQuiz extends FirebaseQuiz {
     id: string;
 }
 
+export interface SnapshotFirebaseQuizWithScores extends SnapshotFirebaseQuiz {
+    userScore: FirebaseQuizAnswers | null;
+}
+
 export interface QuizAnswer {
     number: number;
     answer: string;
+}
+
+export interface FirebaseQuizAnswers {
+    score: number;
+    answers: QuizAnswer[];
 }
