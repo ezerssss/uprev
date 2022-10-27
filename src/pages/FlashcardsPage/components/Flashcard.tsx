@@ -12,12 +12,12 @@ function Flashcard(props: PropsInterface) {
     const randomlyArrangedText = shuffle([keyword, description]);
 
     return (
-        <div className="m-auto min-h-[20rem] w-full lg:w-1/2 border rounded-2xl drop-shadow flex items-center justify-center flip-card cursor-pointer">
+        <div className="flip-card w-full lg:w-1/2 min-h-[25rem] m-auto pt-7">
             <div className="flip-card-inner">
-                <div className="flip-card-front">
+                <div className="flip-card-front min-h-[20rem] border rounded-2xl drop-shadow cursor-pointer p-6 flex items-center justify-center">
                     <p>{randomlyArrangedText[0]}</p>
                 </div>
-                <div className="flip-card-back">
+                <div className="flip-card-back min-h-[20rem] border rounded-2xl drop-shadow cursor-pointer p-6 flex items-center justify-center">
                     <p>{randomlyArrangedText[1]}</p>
                 </div>
             </div>
