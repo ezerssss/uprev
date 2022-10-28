@@ -1,15 +1,19 @@
 import { addDoc, collection, doc, getDoc, updateDoc } from 'firebase/firestore';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { ClipLoader } from 'react-spinners';
 import Swal from 'sweetalert2';
 import { defaultQuestion } from '../../constants/question';
 import { UserContext } from '../../App';
 import db from '../../firebase/db';
-import { FirebaseQuiz, Quiz } from '../../interfaces/quiz';
+import { DraftQuiz, FirebaseQuiz, Quiz } from '../../interfaces/quiz';
 import { QuestionType } from '../../types/question.types';
 import QuestionBlock from './components/Question';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { errorAlert } from '../../helpers/errors';
+import { getDraft, removeDraft, saveDraft } from '../../helpers/draft';
+import { getHighestNumber } from '../../helpers/number';
+import { THREE_MINUTES } from '../../constants/time';
+import { BiX } from 'react-icons/bi';
 
 function CreateQuizPage() {
     const { user, isUpEmail } = useContext(UserContext);
@@ -17,6 +21,9 @@ function CreateQuizPage() {
     const [questions, setQuestions] = useState<Quiz[]>([defaultQuestion]);
     const [isPosting, setIsPosting] = useState<boolean>(false);
     const [title, setTitle] = useState<string>('');
+    const [fromDrafts, setFromDrafts] = useState<boolean>(false);
+    const [dropdownSelection, setDropdownSelection] =
+        useState<string>('math 18');
 
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
@@ -40,16 +47,8 @@ function CreateQuizPage() {
                 const docSnap = await getDoc(docRef);
                 const data = docSnap.data() as FirebaseQuiz;
 
-                ref.current!.value = subject;
-                let highestNumber = 0;
-
-                data.questions.forEach((question) => {
-                    if (question.number > highestNumber) {
-                        highestNumber = question.number;
-                    }
-                });
-
-                setNumber(highestNumber + 1);
+                setDropdownSelection(subject);
+                setNumber(getHighestNumber(data) + 1);
                 setTitle(data.title);
                 setQuestions(data.questions);
             } catch (error) {
@@ -60,6 +59,46 @@ function CreateQuizPage() {
         getFirestoreDocument();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isEditing, id]);
+
+    function handleDraft(draft: DraftQuiz) {
+        setFromDrafts(true);
+        setDropdownSelection(draft.subject);
+
+        setNumber(getHighestNumber(draft) + 1);
+        setTitle(draft.title);
+        setQuestions(draft.questions);
+    }
+
+    function handleSaveDraft() {
+        const shouldSaveToDraft = !!questions[0].question;
+
+        if (!shouldSaveToDraft) return;
+
+        const draft: DraftQuiz = {
+            subject: dropdownSelection,
+            creator: user?.displayName || '-',
+            email: user?.email || '-',
+            title,
+            questions,
+        };
+
+        saveDraft(draft, 'quizDraft');
+    }
+
+    useEffect(() => {
+        const draft = getDraft('quizDraft');
+
+        if (draft) {
+            handleDraft(draft);
+        }
+    }, []);
+
+    useEffect(() => {
+        const intervalID = setInterval(handleSaveDraft, THREE_MINUTES);
+
+        return () => clearInterval(intervalID);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [title, JSON.stringify(questions), dropdownSelection]);
 
     function handleEditQuestion(e: any, number: number, key: string): void {
         const index = questions.findIndex((object) => object.number === number);
@@ -132,8 +171,6 @@ function CreateQuizPage() {
         setQuestions([...questions, question]);
     }
 
-    const ref = useRef<HTMLSelectElement | null>(null);
-
     async function handlePost(
         object: FirebaseQuiz,
         subject: string,
@@ -176,7 +213,7 @@ function CreateQuizPage() {
             return;
         }
 
-        const subject = ref.current?.value || 'lost';
+        const subject = dropdownSelection;
         const object: FirebaseQuiz = {
             creator: user?.displayName || '-',
             email: user?.email || '-',
@@ -192,6 +229,7 @@ function CreateQuizPage() {
             }
 
             setIsPosting(false);
+            removeDraft('quizDraft');
 
             const popUpText = isEditing ? 'Quiz Edited' : 'Quiz Posted';
 
@@ -215,17 +253,6 @@ function CreateQuizPage() {
         );
     }
 
-    useEffect(() => {
-        const unloadCallback = (event: BeforeUnloadEvent) => {
-            event.preventDefault();
-            event.returnValue = '';
-            return '';
-        };
-
-        window.addEventListener('beforeunload', unloadCallback);
-        return () => window.removeEventListener('beforeunload', unloadCallback);
-    }, []);
-
     const postButtonText = isEditing ? 'Edit Quiz' : 'Post Quiz';
 
     const renderSubmitButton = isPosting ? (
@@ -234,14 +261,25 @@ function CreateQuizPage() {
         postButtonText
     );
 
+    const renderFromDrafts = fromDrafts && (
+        <div className="rounded-xl p-3 bg-blue-200 text-sm mb-5 flex justify-between items-center">
+            <p>Restored from drafts</p>
+            <button onClick={() => setFromDrafts(false)}>
+                <BiX />
+            </button>
+        </div>
+    );
+
     return (
         <>
+            {renderFromDrafts}
             <section className="flex gap-2 items-center">
                 <p>Subject</p>
                 <select
                     className="uppercase border p-2 rounded-xl outline-none cursor-pointer"
-                    ref={ref}
                     disabled={isEditing}
+                    value={dropdownSelection}
+                    onChange={(e) => setDropdownSelection(e.target.value)}
                 >
                     <option value="math 18">math 18</option>
                     <option value="cmsc 10">cmsc 10</option>

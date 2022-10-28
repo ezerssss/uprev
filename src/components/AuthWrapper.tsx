@@ -67,6 +67,25 @@ function AuthWrapper(props: PropsInterface) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location.pathname]);
 
+    useEffect(() => {
+        const shouldPreventReload =
+            location.pathname === Routes.CREATE_FLASHCARD_PAGE ||
+            location.pathname === Routes.CREATE_QUIZ_PAGE;
+
+        if (!shouldPreventReload) return;
+
+        const unloadCallback = (event: BeforeUnloadEvent) => {
+            event.preventDefault();
+            event.returnValue = '';
+            return '';
+        };
+        window.addEventListener('beforeunload', unloadCallback);
+
+        return () => {
+            window.removeEventListener('beforeunload', unloadCallback);
+        };
+    }, [location.pathname]);
+
     const render = isLoading ? (
         <div className="w-screen h-screen flex flex-col gap-5 justify-center items-center">
             <h1 className="font-bold text-6xl tracking-wide -mt-5">uprev.</h1>

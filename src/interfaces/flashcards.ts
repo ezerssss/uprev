@@ -11,6 +11,10 @@ export interface FlashcardInterface {
     cards: CardsInterface[];
 }
 
+export interface DraftFlashcard extends FlashcardInterface {
+    subject: string;
+}
+
 export interface SnapshotFlashcard extends FlashcardInterface {
     id: string;
 }

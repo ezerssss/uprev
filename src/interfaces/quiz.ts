@@ -15,6 +15,10 @@ export interface FirebaseQuiz {
     questions: Quiz[];
 }
 
+export interface DraftQuiz extends FirebaseQuiz {
+    subject: string;
+}
+
 export interface SnapshotFirebaseQuiz extends FirebaseQuiz {
     id: string;
 }

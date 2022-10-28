@@ -1,13 +1,18 @@
 import { addDoc, collection, doc, getDoc, updateDoc } from 'firebase/firestore';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { BiX } from 'react-icons/bi';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ClipLoader } from 'react-spinners';
 import Swal from 'sweetalert2';
 import { UserContext } from '../../App';
+import { THREE_MINUTES } from '../../constants/time';
 import db from '../../firebase/db';
+import { getDraft, saveDraft } from '../../helpers/draft';
 import { errorAlert } from '../../helpers/errors';
+import { getHighestNumber } from '../../helpers/number';
 import {
     CardsInterface,
+    DraftFlashcard,
     FlashcardInterface,
 } from '../../interfaces/flashcards';
 import Flashcard from './components/Flashcard';
@@ -25,8 +30,10 @@ function CreateFlashcardPage() {
     ]);
     const [number, setNumber] = useState<number>(1);
     const [isPosting, setIsPosting] = useState<boolean>(false);
+    const [dropdownSelection, setDropdownSelection] =
+        useState<string>('math 18');
+    const [fromDrafts, setFromDrafts] = useState<boolean>(false);
 
-    const ref = useRef<HTMLSelectElement | null>(null);
     const [searchParams] = useSearchParams();
     let id = searchParams.get('id');
 
@@ -49,7 +56,7 @@ function CreateFlashcardPage() {
                 const docSnap = await getDoc(docRef);
                 const data = docSnap.data() as FlashcardInterface;
 
-                ref.current!.value = subject;
+                setDropdownSelection(subject);
                 let highestNumber = 0;
 
                 data.cards.forEach((card) => {
@@ -69,6 +76,46 @@ function CreateFlashcardPage() {
         getFirestoreDocument();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isEditing, id]);
+
+    function handleDraft(draft: DraftFlashcard) {
+        setFromDrafts(true);
+        setDropdownSelection(draft.subject);
+
+        setNumber(getHighestNumber(draft) + 1);
+        setTitle(draft.title);
+        setCards(draft.cards);
+    }
+
+    function handleSaveDraft() {
+        const shouldSaveToDraft = !!cards[0].keyword;
+
+        if (!shouldSaveToDraft) return;
+
+        const draft: DraftFlashcard = {
+            subject: dropdownSelection,
+            creator: user?.displayName || '-',
+            email: user?.email || '-',
+            title,
+            cards,
+        };
+
+        saveDraft(draft, 'flashcardDraft');
+    }
+
+    useEffect(() => {
+        const draft = getDraft('flashcardDraft');
+
+        if (draft) {
+            handleDraft(draft);
+        }
+    }, []);
+
+    useEffect(() => {
+        const intervalID = setInterval(handleSaveDraft, THREE_MINUTES);
+
+        return () => clearInterval(intervalID);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [title, JSON.stringify(cards), dropdownSelection]);
 
     const renderSubmitButton = isPosting ? (
         <ClipLoader size={10} />
@@ -146,7 +193,7 @@ function CreateFlashcardPage() {
             return;
         }
 
-        const subject = ref.current?.value || 'lost';
+        const subject = dropdownSelection;
         const object: FlashcardInterface = {
             creator: user?.displayName || '-',
             email: user?.email || '-',
@@ -181,13 +228,24 @@ function CreateFlashcardPage() {
         }
     }
 
+    const renderFromDrafts = fromDrafts && (
+        <div className="rounded-xl p-3 bg-blue-200 text-sm mb-5 flex justify-between items-center">
+            <p>Restored from drafts</p>
+            <button onClick={() => setFromDrafts(false)}>
+                <BiX />
+            </button>
+        </div>
+    );
+
     return (
         <>
+            {renderFromDrafts}
             <section className="flex gap-2 items-center">
                 <p>Subject</p>
                 <select
                     className="uppercase border p-2 rounded-xl outline-none cursor-pointer"
-                    ref={ref}
+                    value={dropdownSelection}
+                    onChange={(e) => setDropdownSelection(e.target.value)}
                 >
                     <option value="math 18">math 18</option>
                     <option value="cmsc 10">cmsc 10</option>
