@@ -8,15 +8,21 @@ import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { Carousel } from 'react-responsive-carousel';
 import Flashcard from './components/Flashcard';
 import { shuffle } from '../../helpers/shuffle';
+import { FlashcardModeEnum } from '../../enums/flashcard-mode.enum';
 
 function FlashcardsPage() {
-    const [flashcard, setFlashcard] = useState<FlashcardInterface | null>(null);
+    const [flashcards, setFlashcards] = useState<FlashcardInterface | null>(
+        null,
+    );
+    const [mode, setMode] = useState<FlashcardModeEnum>(
+        FlashcardModeEnum.RANDOM,
+    );
 
     const { subject, doc: documentID } = useParams();
     const formattedSubject = subject?.replace('-', ' ') || 'lost';
     const formattedDocumentID = documentID || 'lost';
 
-    const showElements = !!flashcard;
+    const showElements = !!flashcards;
 
     useEffect(() => {
         async function getFirestore() {
@@ -36,7 +42,7 @@ function FlashcardsPage() {
                 const data = flashcardSnapshot.data() as FlashcardInterface;
                 data.cards = shuffle(data.cards);
 
-                setFlashcard(data);
+                setFlashcards(data);
             } catch (error) {
                 errorAlert(error);
             }
@@ -45,31 +51,89 @@ function FlashcardsPage() {
         getFirestore();
     }, [formattedSubject, formattedDocumentID, documentID]);
 
-    const renderOneFlashcard = flashcard?.cards.length === 1 && (
-        <Flashcard card={flashcard.cards[0]} />
+    const renderOneFlashcard = flashcards?.cards.length === 1 && (
+        <Flashcard card={flashcards.cards[0]} mode={mode} />
     );
 
-    const renderCarouselFlashcards = flashcard &&
-        flashcard.cards.length > 1 && (
+    const renderCarouselFlashcards = flashcards &&
+        flashcards.cards.length > 1 && (
             <Carousel emulateTouch infiniteLoop showArrows showThumbs={false}>
-                {flashcard.cards.map((card, index) => (
-                    <Flashcard key={index} card={card} />
+                {flashcards.cards.map((card, index) => (
+                    <Flashcard key={index} card={card} mode={mode} />
                 ))}
             </Carousel>
         );
 
+    function buttonColor(buttonMode: FlashcardModeEnum): string {
+        if (mode !== buttonMode) return '';
+
+        return 'bg-red-500 text-white';
+    }
+
+    function handleModeClick(buttonMode: FlashcardModeEnum) {
+        setMode(buttonMode);
+    }
+
+    function handleShuffleButton() {
+        if (!flashcards?.cards) return;
+
+        flashcards.cards = shuffle(flashcards.cards);
+        setFlashcards({ ...flashcards });
+    }
+
     return (
         <>
             <section>
-                <h1 className="text-4xl font-bold">{flashcard?.title}</h1>
+                <h1 className="text-4xl font-bold">{flashcards?.title}</h1>
                 {showElements && (
                     <p className="text-[12px] my-2">
-                        By: {flashcard?.creator} | {flashcard?.email}
+                        By: {flashcards?.creator} | {flashcards?.email}
                     </p>
                 )}
             </section>
             <section className="my-10">
                 <p className="text-sm mb-4">Press to flip the card</p>
+                <div className="text-sm flex gap-2 items-center flex-wrap">
+                    <p>Flashcards Mode:</p>
+                    <div className="flex gap-2">
+                        <button
+                            className={`border rounded-xl p-2 transition ease-in-out duration-500 ${buttonColor(
+                                FlashcardModeEnum.RANDOM,
+                            )}`}
+                            onClick={() =>
+                                handleModeClick(FlashcardModeEnum.RANDOM)
+                            }
+                        >
+                            Random
+                        </button>
+                        <button
+                            className={`border rounded-xl p-2 transition ease-in-out duration-500 ${buttonColor(
+                                FlashcardModeEnum.KEYWORD,
+                            )}`}
+                            onClick={() =>
+                                handleModeClick(FlashcardModeEnum.KEYWORD)
+                            }
+                        >
+                            Keyword First
+                        </button>
+                        <button
+                            className={`border rounded-xl p-2 transition ease-in-out duration-500 ${buttonColor(
+                                FlashcardModeEnum.DESCRIPTION,
+                            )}`}
+                            onClick={() =>
+                                handleModeClick(FlashcardModeEnum.DESCRIPTION)
+                            }
+                        >
+                            Description First
+                        </button>
+                    </div>
+                </div>
+                <button
+                    className="text-sm mt-2 border rounded-xl p-2 active:bg-red-500 active:text-white transition ease-in-out duration-300"
+                    onClick={handleShuffleButton}
+                >
+                    Shuffle
+                </button>
                 {renderOneFlashcard}
                 {renderCarouselFlashcards}
             </section>

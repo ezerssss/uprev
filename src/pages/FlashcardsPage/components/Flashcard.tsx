@@ -1,15 +1,27 @@
 import { useRef } from 'react';
+import { FlashcardModeEnum } from '../../../enums/flashcard-mode.enum';
 import { shuffle } from '../../../helpers/shuffle';
 import { CardsInterface } from '../../../interfaces/flashcards';
 
 interface PropsInterface {
     card: CardsInterface;
+    mode: FlashcardModeEnum;
 }
 
 function Flashcard(props: PropsInterface) {
-    const { card } = props;
+    const { card, mode } = props;
     const { keyword, description } = card;
     const randomlyArrangedText = shuffle([keyword, description]);
+    let first = randomlyArrangedText[0];
+    let second = randomlyArrangedText[1];
+
+    if (mode === FlashcardModeEnum.KEYWORD) {
+        first = keyword;
+        second = description;
+    } else if (mode === FlashcardModeEnum.DESCRIPTION) {
+        first = description;
+        second = keyword;
+    }
 
     const ref = useRef<HTMLDivElement | null>(null);
 
@@ -26,13 +38,13 @@ function Flashcard(props: PropsInterface) {
                     className="flip-card-front min-h-[20rem] border rounded-2xl drop-shadow cursor-pointer p-6 flex items-center justify-center"
                     onClick={handleClick}
                 >
-                    <p>{randomlyArrangedText[0]}</p>
+                    <p>{first}</p>
                 </div>
                 <div
                     className="flip-card-back min-h-[20rem] border rounded-2xl drop-shadow cursor-pointer p-6 flex items-center justify-center"
                     onClick={handleClick}
                 >
-                    <p>{randomlyArrangedText[1]}</p>
+                    <p>{second}</p>
                 </div>
             </div>
         </div>
