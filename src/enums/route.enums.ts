@@ -7,4 +7,5 @@ export enum Routes {
     LOGIN_PAGE = '/login',
     QUIZ_LIST_PAGE = '/quizzes/:subject',
     QUIZ_PAGE = '/quizzes/:subject/:doc',
+    PRIVACY_POLICY_PAGE = '/privacy-policy'
 }

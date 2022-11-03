@@ -13,6 +13,7 @@ import { User } from 'firebase/auth';
 import FlashcardsListPage from './pages/FlashcardsListPage/FlashcardsListPage';
 import FlashcardsPage from './pages/FlashcardsPage/FlashcardsPage';
 import CreateFlashcardPage from './pages/CreateFlashcardPage/CreateFlashcardPage';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 
 export const UserContext = createContext<{
     isUpEmail: boolean | null;
@@ -105,6 +106,14 @@ function App() {
                         <FlashcardsPage />
                     </ContentWrapper>
                 </AuthWrapper>
+            ),
+        },
+        {
+            path: Routes.PRIVACY_POLICY_PAGE,
+            element: (
+                <ContentWrapper>
+                    <PrivacyPolicyPage />
+                </ContentWrapper>
             ),
         },
     ]);
