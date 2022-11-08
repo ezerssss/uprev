@@ -60,13 +60,13 @@ function Home() {
                 </p>
                 <div className="flex gap-2">
                     <button
-                        className="text-center border-2 px-5 py-3 rounded-2xl hover:bg-red-500 hover:text-white transition ease-in-out duration-500"
+                        className="text-center border-2 bg-[#9ddadb] px-5 py-3 rounded-2xl hover:text-white transition ease-in-out duration-500"
                         onClick={handleCreateQuiz}
                     >
                         Quiz
                     </button>
                     <button
-                        className="text-center border-2 px-5 py-3 rounded-2xl hover:bg-red-500 hover:text-white transition ease-in-out duration-500"
+                        className="text-center border-2 bg-[#9ddadb] px-5 py-3 rounded-2xl hover:text-white transition ease-in-out duration-500"
                         onClick={handleCreateFlashcard}
                     >
                         Flashcard
