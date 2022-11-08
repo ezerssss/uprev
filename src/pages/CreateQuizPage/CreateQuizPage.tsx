@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from 'react';
 import { ClipLoader } from 'react-spinners';
 import Swal from 'sweetalert2';
 import { defaultQuestion } from '../../constants/question';
-import { UserContext } from '../../App';
+import { ConfigContext, UserContext } from '../../App';
 import db from '../../firebase/db';
 import { DraftQuiz, FirebaseQuiz, Quiz } from '../../interfaces/quiz';
 import { QuestionType } from '../../types/question.types';
@@ -270,6 +270,8 @@ function CreateQuizPage() {
         </div>
     );
 
+    const { subjects } = useContext(ConfigContext);
+
     return (
         <>
             {renderFromDrafts}
@@ -281,10 +283,13 @@ function CreateQuizPage() {
                     value={dropdownSelection}
                     onChange={(e) => setDropdownSelection(e.target.value)}
                 >
-                    <option value="math 18">math 18</option>
-                    <option value="cmsc 10">cmsc 10</option>
-                    <option value="cmsc 11">cmsc 11</option>
-                    <option value="cmsc 56">cmsc 56</option>
+                    {subjects
+                        .filter((subject) => !!subject)
+                        .map((subject) => (
+                            <option key={subject} value={subject}>
+                                {subject}
+                            </option>
+                        ))}
                 </select>
             </section>
             <section className="flex gap-2 my-3 text-sm">

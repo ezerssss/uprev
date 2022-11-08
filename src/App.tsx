@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useEffect, useState } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import AuthWrapper from './components/AuthWrapper';
 import ContentWrapper from './components/ContentWrapper';
@@ -14,6 +14,7 @@ import FlashcardsListPage from './pages/FlashcardsListPage/FlashcardsListPage';
 import FlashcardsPage from './pages/FlashcardsPage/FlashcardsPage';
 import CreateFlashcardPage from './pages/CreateFlashcardPage/CreateFlashcardPage';
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
+import { getSubjectsConfig } from './helpers/config';
 
 export const UserContext = createContext<{
     isUpEmail: boolean | null;
@@ -26,6 +27,11 @@ export const UserContext = createContext<{
     setUser: null,
     setIsUpEmail: null,
 });
+
+export const ConfigContext = createContext<{
+    subjects: string[];
+    setSubjects: React.Dispatch<React.SetStateAction<string[]>> | null;
+}>({ subjects: [], setSubjects: null });
 
 function App() {
     const router = createBrowserRouter([
@@ -120,12 +126,26 @@ function App() {
 
     const [user, setUser] = useState<User | null>(null);
     const [isUpEmail, setIsUpEmail] = useState<boolean | null>(false);
+    const [subjects, setSubjects] = useState<string[]>([
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+    ]);
+
+    useEffect(() => {
+        setSubjects(getSubjectsConfig());
+    }, []);
 
     return (
         <UserContext.Provider
             value={{ isUpEmail, user, setUser, setIsUpEmail }}
         >
-            <RouterProvider router={router} />
+            <ConfigContext.Provider value={{ subjects, setSubjects }}>
+                <RouterProvider router={router} />
+            </ConfigContext.Provider>
         </UserContext.Provider>
     );
 }

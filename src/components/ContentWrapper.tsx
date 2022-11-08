@@ -1,11 +1,15 @@
 import auth from '../firebase/auth';
 import { BsFacebook, BsTwitter, BsYoutube } from 'react-icons/bs';
 import { FaTiktok } from 'react-icons/fa';
+import { FiSettings } from 'react-icons/fi';
 import { useNavigate } from 'react-router-dom';
 import { Routes } from '../enums/route.enums';
 import logo from '../images/logo.png';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import ReactTooltip from 'react-tooltip';
+import Modal from 'react-modal';
+import { useContext, useState } from 'react';
+import ModalContent from './ModalContent';
 
 interface PropsInterface {
     children: JSX.Element | JSX.Element[];
@@ -15,6 +19,14 @@ function ContentWrapper(props: PropsInterface) {
     const { children } = props;
 
     const navigate = useNavigate();
+
+    function handleCloseModal() {
+        setIsModalOpen(false);
+    }
+
+    function handleOpenModal() {
+        setIsModalOpen(true);
+    }
 
     function handleLogout(): void {
         auth.signOut();
@@ -29,9 +41,14 @@ function ContentWrapper(props: PropsInterface) {
         navigate(1);
     }
 
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
     return (
         <>
             <ReactTooltip />
+            <Modal isOpen={isModalOpen} onRequestClose={handleCloseModal}>
+                <ModalContent handleCloseModal={handleCloseModal} />
+            </Modal>
 
             <div className="min-h-[100vh] flex flex-col">
                 <header>
@@ -45,19 +62,27 @@ function ContentWrapper(props: PropsInterface) {
                                 uprev.
                             </p>
                         </div>
-                        <div className="flex gap-2 items-center">
-                            <button
-                                data-tip="Go back"
-                                onClick={handleBackButton}
-                            >
-                                <IoIosArrowBack />
-                            </button>
-                            <button
-                                data-tip="Go forward"
-                                onClick={handleForwardButton}
-                            >
-                                <IoIosArrowForward />
-                            </button>
+                        <div className="flex gap-5 items-center">
+                            <div className="flex gap-2">
+                                <button
+                                    data-tip="Settings"
+                                    onClick={handleOpenModal}
+                                >
+                                    <FiSettings />
+                                </button>
+                                <button
+                                    data-tip="Go back"
+                                    onClick={handleBackButton}
+                                >
+                                    <IoIosArrowBack />
+                                </button>
+                                <button
+                                    data-tip="Go forward"
+                                    onClick={handleForwardButton}
+                                >
+                                    <IoIosArrowForward />
+                                </button>
+                            </div>
                             <p
                                 className="text-sm cursor-pointer"
                                 onClick={handleLogout}
