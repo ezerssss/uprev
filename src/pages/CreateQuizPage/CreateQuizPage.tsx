@@ -223,7 +223,8 @@ function CreateQuizPage() {
 
         const invalidQuestions = questions.find((q) => {
             const isQuestionTitleEmpty = !q.question;
-            const areThereEmptyChoices = q.choices.find((c) => !c)?.length == 0;
+            const areThereEmptyChoices =
+                q.choices.find((c) => !c)?.length === 0;
             const isCorrectAnswerEmpty = !q.answer;
 
             return (

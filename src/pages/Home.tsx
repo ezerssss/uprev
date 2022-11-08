@@ -23,7 +23,7 @@ function Home() {
 
     return (
         <>
-            <div className="flex flex-col-reverse flex-col items-center gap-10 2xl:flex-row">
+            <div className="flex flex-col-reverse flex-col items-center justify-between gap-5 2xl:gap-24 2xl:flex-row">
                 <section className="w-full 2xl:w-[40%]">
                     <h1 className="text-[3.2rem] leading-none font-bold my-10 text-center 2xl:text-left">
                         Let's review <br /> together.
@@ -41,7 +41,7 @@ function Home() {
                         ))}
                     </div>
                 </section>
-                <section className="w-full max-w-[600px] 2xl:w-[60%]">
+                <section className="w-full max-w-[600px] 2xl:w-[55%]">
                     <div>
                         <img
                             alt="uprev"

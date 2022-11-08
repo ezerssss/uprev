@@ -17,7 +17,7 @@ interface PropsInterface {
 function ModalContent(props: PropsInterface) {
     const { handleCloseModal } = props;
 
-    const { subjects, setSubjects } = useContext(ConfigContext);
+    const { setSubjects } = useContext(ConfigContext);
 
     const [picker, setPicker] = useState<PickerConfig[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
