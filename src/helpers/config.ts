@@ -2,7 +2,7 @@ import { doc, getDoc } from 'firebase/firestore';
 import { defaultSubjects } from '../constants/defaults';
 import db from '../firebase/db';
 
-function validateSubjects(subjects: string[]) {
+export function validateSubjects(subjects: string[]) {
     while (subjects.length < 6) {
         subjects.push('');
     }

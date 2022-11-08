@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Routes } from '../enums/route.enums';
 import { ConfigContext } from '../App';
 import { useContext } from 'react';
+import { validateSubjects } from '../helpers/config';
 
 function Home() {
     const navigate = useNavigate();
@@ -23,15 +24,17 @@ function Home() {
 
     return (
         <>
-            <div className="flex flex-col-reverse flex-col items-center justify-between gap-5 2xl:gap-24 2xl:flex-row">
+            <div className="flex flex-col-reverse flex-col items-center 2xl:items-end justify-between gap-5 2xl:gap-24 2xl:flex-row">
                 <section className="w-full 2xl:w-[40%]">
-                    <h1 className="text-[3.2rem] leading-none font-bold my-10 text-center 2xl:text-left">
+                    <h1 className="text-[3.2rem] leading-none font-bold my-10 text-center 2xl:text-left text-[#ec7495]">
                         Let's review <br /> together.
                     </h1>
-                    <div className="grid grid-rows-2 grid-cols-3 gap-1 sm:gap-5 w-[280px] sm:w-[450px] m-auto 2xl:m-0">
-                        {subjects.map((subject) => (
+                    <div className="grid grid-rows-2 grid-cols-3 gap-1 sm:gap-3 w-[280px] sm:w-[400px] m-auto 2xl:m-0">
+                        {validateSubjects(
+                            subjects.filter((subject) => !!subject),
+                        ).map((subject) => (
                             <button
-                                className="aspect-square w-full border-2 rounded-2xl hover:scale-105 hover:bg-red-500 hover:text-white transition ease-in-out duration-500 flex justify-center items-center uppercase"
+                                className="aspect-square w-full border-2 border-[#9ddadb] rounded-2xl hover:scale-105 hover:bg-[#9ddadb]  transition ease-in-out duration-500 flex justify-center items-center uppercase"
                                 key={subject}
                                 disabled={!subject}
                                 onClick={() => handleSubjectClick(subject)}
@@ -51,7 +54,7 @@ function Home() {
                     </div>
                 </section>
             </div>
-            <div className="mt-24 flex flex-col items-center 2xl:items-start mb-14">
+            <div className="mt-7 flex flex-col items-center 2xl:items-start">
                 <p className="my-5 font-bold text-lg">
                     Help others review! Make your own:
                 </p>

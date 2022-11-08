@@ -98,9 +98,9 @@ function ModalContent(props: PropsInterface) {
     }
 
     return (
-        <div className="flex items-center justify-center h-full text-sm relative">
+        <div className="flex items-center justify-center h-full text-sm">
             <button
-                className="absolute p-2 top-5 right-0 md:right-5"
+                className="absolute p-2 top-2 right-2"
                 onClick={handleCloseModal}
             >
                 <AiFillCloseCircle data-tip="Close modal" size={25} />
@@ -111,7 +111,7 @@ function ModalContent(props: PropsInterface) {
                     <select
                         disabled={useCustomSubjects}
                         value={selectedCourse}
-                        className="uppercase border p-2 rounded-xl outline-none cursor-pointer my-2 min-w-[200px]"
+                        className="uppercase border p-2 rounded-xl outline-none cursor-pointer my-2 min-w-[200px] w-full"
                         onChange={(event) =>
                             setSelectedCourse(event.target.value)
                         }
@@ -127,7 +127,7 @@ function ModalContent(props: PropsInterface) {
                 <section className="my-3">
                     <p>Year:</p>
                     <select
-                        className="uppercase border p-2 rounded-xl outline-none cursor-pointer my-2 min-w-[200px]"
+                        className="uppercase border p-2 rounded-xl outline-none cursor-pointer my-2 min-w-[200px] w-full"
                         disabled={useCustomSubjects}
                         value={selectedYear}
                         onChange={(event) =>

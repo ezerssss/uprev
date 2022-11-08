@@ -46,7 +46,11 @@ function ContentWrapper(props: PropsInterface) {
     return (
         <>
             <ReactTooltip />
-            <Modal isOpen={isModalOpen} onRequestClose={handleCloseModal}>
+            <Modal
+                isOpen={isModalOpen}
+                onRequestClose={handleCloseModal}
+                className="bg-white border rounded-lg m-auto absolute top-0 bottom-0 left-0 right-0 w-[90%] md:w-[500px] h-[600px] px-20"
+            >
                 <ModalContent handleCloseModal={handleCloseModal} />
             </Modal>
 
@@ -95,9 +99,9 @@ function ContentWrapper(props: PropsInterface) {
                 <main className="flex-1 px-4 sm:px-8 2xl:px-64">
                     {children}
                 </main>
-                <footer className="px-5 sm:px-20 2xl:px-64 py-8 max-[1000px]:rounded-t rounded-t-[150px] bg-gray-100 relative">
-                    <div className="flex max-[1000px]:flex-col items-center">
-                        <div className="max-[1000px]:w-full w-[60%]">
+                <footer className="mt-32 px-5 sm:px-20 2xl:px-64 py-8 max-[1000px]:rounded-t rounded-t-[150px] bg-gray-100 relative">
+                    <div className="flex max-[1000px]:flex-col gap-0 min-[1000px]:gap-24 items-end">
+                        <div className="max-[1000px]:w-full flex-1">
                             <h2 className="font-bold text-lg mt-5">
                                 What is uprev?
                             </h2>
@@ -110,7 +114,7 @@ function ContentWrapper(props: PropsInterface) {
                                 knowledge. Let's review together!
                             </p>
                         </div>
-                        <div className="max-[1000px]:w-full w-[40%] flex max-[450px]:flex-col-reverse max-[1000px]:flex-row-reverse max-[450px]:items-center items-end justify-end gap-2">
+                        <div className="max-[1000px]:w-full flex max-[450px]:flex-col-reverse max-[1000px]:flex-row-reverse max-[450px]:items-center items-end justify-end gap-2">
                             <div className="flex flex-col max-[1000px]:items-center items-end">
                                 <a
                                     href="https://play.google.com/store/apps/details?id=com.dioskor0.uprev"
@@ -129,7 +133,7 @@ function ContentWrapper(props: PropsInterface) {
                             </div>
                             <img
                                 alt="uprev mobile app"
-                                className="h-[300px] mt-10 min-[1000px]:-mt-[150px]"
+                                className="h-[300px] mt-10 min-[1000px]:-mt-[150px] w-[110px] h-auto"
                                 src={phone}
                             />
                         </div>
