@@ -201,6 +201,26 @@ function CreateFlashcardPage() {
             cards,
         };
 
+        const invalidCards = cards.find((c) => {
+            const isKeywordEmpty = !c.keyword;
+            const isDescriptionEmpty = !c.description;
+
+            return isKeywordEmpty || isDescriptionEmpty;
+        });
+
+        const invalidForm = !object.title || invalidCards;
+
+        if (invalidForm) {
+            Swal.fire(
+                'Hold up!',
+                'You got some empty text fields. Please fill up all the text inputs.',
+                'warning',
+            );
+            setIsPosting(false);
+
+            return;
+        }
+
         try {
             if (isEditing) {
                 handleEdit(object);

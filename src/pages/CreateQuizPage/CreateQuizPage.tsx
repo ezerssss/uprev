@@ -221,6 +221,30 @@ function CreateQuizPage() {
             questions,
         };
 
+        const invalidQuestions = questions.find((q) => {
+            const isQuestionTitleEmpty = !q.question;
+            const areThereEmptyChoices = q.choices.find((c) => !c)?.length == 0;
+            const isCorrectAnswerEmpty = !q.answer;
+
+            return (
+                isQuestionTitleEmpty ||
+                areThereEmptyChoices ||
+                isCorrectAnswerEmpty
+            );
+        });
+        const invalidForm = !object.title || invalidQuestions;
+
+        if (invalidForm) {
+            Swal.fire(
+                'Hold up!',
+                'You got some empty text fields. Please fill up all the text inputs.',
+                'warning',
+            );
+            setIsPosting(false);
+
+            return;
+        }
+
         try {
             if (isEditing) {
                 handleEdit(object);
