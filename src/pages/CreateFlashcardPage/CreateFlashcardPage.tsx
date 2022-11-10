@@ -18,7 +18,7 @@ import {
 import Flashcard from './components/Flashcard';
 
 function CreateFlashcardPage() {
-    const { user, isUpEmail } = useContext(UserContext);
+    const { user, isEmailWhitelisted } = useContext(UserContext);
     const navigate = useNavigate();
     const [title, setTitle] = useState<string>('');
     const [cards, setCards] = useState<CardsInterface[]>([
@@ -182,10 +182,10 @@ function CreateFlashcardPage() {
 
     async function handleSubmit() {
         setIsPosting(true);
-        if (!isUpEmail) {
+        if (!isEmailWhitelisted) {
             Swal.fire(
                 'Error',
-                'To post a quiz, you must use your UP email',
+                'To post a quiz, you must use a whitelisted email.',
                 'info',
             );
             setIsPosting(false);

@@ -17,15 +17,17 @@ import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import { getSubjectsConfig } from './helpers/config';
 
 export const UserContext = createContext<{
-    isUpEmail: boolean | null;
+    isEmailWhitelisted: boolean | null;
     user: User | null;
-    setIsUpEmail: React.Dispatch<React.SetStateAction<boolean | null>> | null;
+    setIsEmailWhitelisted: React.Dispatch<
+        React.SetStateAction<boolean | null>
+    > | null;
     setUser: React.Dispatch<React.SetStateAction<User | null>> | null;
 }>({
-    isUpEmail: false,
+    isEmailWhitelisted: false,
     user: null,
     setUser: null,
-    setIsUpEmail: null,
+    setIsEmailWhitelisted: null,
 });
 
 export const ConfigContext = createContext<{
@@ -125,7 +127,9 @@ function App() {
     ]);
 
     const [user, setUser] = useState<User | null>(null);
-    const [isUpEmail, setIsUpEmail] = useState<boolean | null>(false);
+    const [isEmailWhitelisted, setIsEmailWhitelisted] = useState<
+        boolean | null
+    >(false);
     const [subjects, setSubjects] = useState<string[]>([
         '',
         '',
@@ -141,7 +145,12 @@ function App() {
 
     return (
         <UserContext.Provider
-            value={{ isUpEmail, user, setUser, setIsUpEmail }}
+            value={{
+                isEmailWhitelisted: isEmailWhitelisted,
+                user,
+                setUser,
+                setIsEmailWhitelisted: setIsEmailWhitelisted,
+            }}
         >
             <ConfigContext.Provider value={{ subjects, setSubjects }}>
                 <RouterProvider router={router} />

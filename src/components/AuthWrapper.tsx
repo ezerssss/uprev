@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import ClipLoader from 'react-spinners/ClipLoader';
-import { doc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import auth from '../firebase/auth';
 import db from '../firebase/db';
 import { Routes } from '../enums/route.enums';
@@ -17,7 +17,7 @@ function AuthWrapper(props: PropsInterface) {
     const navigate = useNavigate();
     const location = useLocation();
     const [isLoading, setIsLoading] = useState<boolean>(true);
-    const { setUser, setIsUpEmail } = useContext(UserContext);
+    const { setUser, setIsEmailWhitelisted } = useContext(UserContext);
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(async (user) => {
@@ -29,14 +29,21 @@ function AuthWrapper(props: PropsInterface) {
                 return;
             }
 
-            const isUpEmail = !!user.email?.includes('@up.edu.ph');
+            const whitelistDocRef = doc(db, 'config', 'emails');
+            const whitelistData = (await (
+                await getDoc(whitelistDocRef)
+            ).data()) as Record<string, string[]>;
 
-            if (setIsUpEmail) {
-                setIsUpEmail(isUpEmail);
+            const isEmailWhitelisted = !!whitelistData.whitelist.find((data) =>
+                user.email?.includes(data),
+            );
+
+            if (setIsEmailWhitelisted) {
+                setIsEmailWhitelisted(isEmailWhitelisted);
             }
 
             if (location.pathname === Routes.LOGIN_PAGE) {
-                if (isUpEmail) {
+                if (isEmailWhitelisted) {
                     const userDocument: User = {
                         displayName: user.displayName || '-',
                         email: user.email || '-',

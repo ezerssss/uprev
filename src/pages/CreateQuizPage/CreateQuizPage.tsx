@@ -16,7 +16,7 @@ import { THREE_MINUTES } from '../../constants/time';
 import { BiX } from 'react-icons/bi';
 
 function CreateQuizPage() {
-    const { user, isUpEmail } = useContext(UserContext);
+    const { user, isEmailWhitelisted } = useContext(UserContext);
     const [number, setNumber] = useState<number>(1);
     const [questions, setQuestions] = useState<Quiz[]>([defaultQuestion]);
     const [isPosting, setIsPosting] = useState<boolean>(false);
@@ -202,10 +202,10 @@ function CreateQuizPage() {
 
     async function handleSubmitButton() {
         setIsPosting(true);
-        if (!isUpEmail) {
+        if (!isEmailWhitelisted) {
             Swal.fire(
                 'Error',
-                'To post a quiz, you must use your UP email',
+                'To post a quiz, you must use a whitelisted email.',
                 'info',
             );
             setIsPosting(false);

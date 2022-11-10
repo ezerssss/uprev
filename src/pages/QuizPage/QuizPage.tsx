@@ -20,7 +20,7 @@ function QuizPage() {
     const formattedSubject = subject?.replace('-', ' ') || 'lost';
     const formattedDocumentID = documentID || 'lost';
 
-    const { user, isUpEmail } = useContext(UserContext);
+    const { user, isEmailWhitelisted } = useContext(UserContext);
     const [quiz, setQuiz] = useState<FirebaseQuiz | null>(null);
     const [answers, setAnswers] = useState<QuizAnswer[]>([]);
     const [showAnswers, setShowAnswers] = useState<boolean>(false);
@@ -204,12 +204,12 @@ function QuizPage() {
         const score = handleCalculateScore();
 
         if (!isAlreadyTaken) {
-            if (isUpEmail) {
+            if (isEmailWhitelisted) {
                 handleStoreScore(score);
             } else {
                 Swal.fire(
                     'Score',
-                    'Scores are not recorded for non UP emails',
+                    'Scores are not recorded for not whitelisted emails.',
                     'info',
                 );
             }
