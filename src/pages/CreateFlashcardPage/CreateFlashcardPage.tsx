@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
 import { ConfigContext, UserContext } from '../../App';
 import { THREE_MINUTES } from '../../constants/time';
 import db from '../../firebase/db';
-import { getDraft, saveDraft } from '../../helpers/draft';
+import { getDraft, removeDraft, saveDraft } from '../../helpers/draft';
 import { errorAlert } from '../../helpers/errors';
 import { getHighestNumber } from '../../helpers/number';
 import {
@@ -229,6 +229,7 @@ function CreateFlashcardPage() {
             }
 
             setIsPosting(false);
+            removeDraft('flashcardDraft');
 
             const popUpText = isEditing
                 ? 'Flashcards Edited'
