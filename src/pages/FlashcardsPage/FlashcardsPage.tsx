@@ -1,5 +1,5 @@
 import { doc, getDoc } from 'firebase/firestore';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import db from '../../firebase/db';
 import { errorAlert } from '../../helpers/errors';
@@ -9,6 +9,7 @@ import { Carousel } from 'react-responsive-carousel';
 import { shuffle } from '../../helpers/shuffle';
 import { FlashcardModeEnum } from '../../enums/flashcard-mode.enum';
 import React from 'react';
+import { ClipLoader } from 'react-spinners';
 
 const Flashcard = React.lazy(() => import('./components/Flashcard'));
 
@@ -59,18 +60,26 @@ function FlashcardsPage() {
 
     const renderCarouselFlashcards = flashcards &&
         flashcards.cards.length > 1 && (
-            <Carousel
-                emulateTouch
-                infiniteLoop
-                showArrows={false}
-                showThumbs={false}
-                showIndicators={false}
-                onChange={(index) => console.log(index)}
+            <Suspense
+                fallback={
+                    <div className="w-full flex justify-center items-center">
+                        <ClipLoader />
+                    </div>
+                }
             >
-                {flashcards.cards.map((card, index) => (
-                    <Flashcard key={index} card={card} mode={mode} />
-                ))}
-            </Carousel>
+                <Carousel
+                    emulateTouch
+                    infiniteLoop
+                    showArrows={false}
+                    showThumbs={false}
+                    showIndicators={false}
+                    onChange={(index) => console.log(index)}
+                >
+                    {flashcards.cards.map((card, index) => (
+                        <Flashcard key={index} card={card} mode={mode} />
+                    ))}
+                </Carousel>
+            </Suspense>
         );
 
     function buttonColor(buttonMode: FlashcardModeEnum): string {
