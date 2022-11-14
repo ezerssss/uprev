@@ -146,7 +146,7 @@ function QuizPage() {
 
     function handleCalculateScore(): number {
         let score = 0;
-        quiz?.questions.forEach(({ number, answer }) => {
+        quiz?.questions?.forEach(({ number, answer }) => {
             const userAnswer = answers.find((ans) => ans.number === number);
 
             if (answer === userAnswer?.answer) {

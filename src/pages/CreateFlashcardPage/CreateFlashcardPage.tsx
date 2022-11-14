@@ -59,7 +59,7 @@ function CreateFlashcardPage() {
                 setDropdownSelection(subject);
                 let highestNumber = 0;
 
-                data.cards.forEach((card) => {
+                data?.cards?.forEach((card) => {
                     if (card.number > highestNumber) {
                         highestNumber = card.number;
                     }

@@ -37,7 +37,7 @@ function FlashcardsListPage() {
         const unsubscribe = onSnapshot(q, async (querySnapshot) => {
             try {
                 const snapshotArray: SnapshotFlashcard[] = [];
-                querySnapshot.forEach((card) => {
+                querySnapshot?.forEach((card) => {
                     const data = card.data() as FlashcardInterface;
                     const object: SnapshotFlashcard = {
                         id: card.id,
