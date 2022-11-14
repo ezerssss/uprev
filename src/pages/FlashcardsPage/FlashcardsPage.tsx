@@ -6,9 +6,11 @@ import { errorAlert } from '../../helpers/errors';
 import { FlashcardInterface } from '../../interfaces/flashcards';
 import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { Carousel } from 'react-responsive-carousel';
-import Flashcard from './components/Flashcard';
 import { shuffle } from '../../helpers/shuffle';
 import { FlashcardModeEnum } from '../../enums/flashcard-mode.enum';
+import React from 'react';
+
+const Flashcard = React.lazy(() => import('./components/Flashcard'));
 
 function FlashcardsPage() {
     const [flashcards, setFlashcards] = useState<FlashcardInterface | null>(
@@ -63,6 +65,7 @@ function FlashcardsPage() {
                 showArrows={false}
                 showThumbs={false}
                 showIndicators={false}
+                onChange={(index) => console.log(index)}
             >
                 {flashcards.cards.map((card, index) => (
                     <Flashcard key={index} card={card} mode={mode} />
