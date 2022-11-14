@@ -81,7 +81,7 @@ function CreateFlashcardPage() {
         setFromDrafts(true);
         setDropdownSelection(draft.subject);
 
-        setNumber(getHighestNumber(draft) + 1);
+        setNumber(getHighestNumber(draft.cards) + 1);
         setTitle(draft.title);
         setCards(draft.cards);
     }

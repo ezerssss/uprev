@@ -48,7 +48,7 @@ function CreateQuizPage() {
                 const data = docSnap.data() as FirebaseQuiz;
 
                 setDropdownSelection(subject);
-                setNumber(getHighestNumber(data) + 1);
+                setNumber(getHighestNumber(data.questions) + 1);
                 setTitle(data.title);
                 setQuestions(data.questions);
             } catch (error) {
@@ -64,7 +64,7 @@ function CreateQuizPage() {
         setFromDrafts(true);
         setDropdownSelection(draft.subject);
 
-        setNumber(getHighestNumber(draft) + 1);
+        setNumber(getHighestNumber(draft.questions) + 1);
         setTitle(draft.title);
         setQuestions(draft.questions);
     }
