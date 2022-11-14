@@ -57,7 +57,13 @@ function FlashcardsPage() {
 
     const renderCarouselFlashcards = flashcards &&
         flashcards.cards.length > 1 && (
-            <Carousel emulateTouch infiniteLoop showArrows showThumbs={false}>
+            <Carousel
+                emulateTouch
+                infiniteLoop
+                showArrows={false}
+                showThumbs={false}
+                showIndicators={false}
+            >
                 {flashcards.cards.map((card, index) => (
                     <Flashcard key={index} card={card} mode={mode} />
                 ))}
